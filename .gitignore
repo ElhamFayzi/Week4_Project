@@ -1,0 +1,20 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Env files
+.env
+
+# Database (since it is regenerated from searches)
+eventcache.db
+
+# OS
+.DS_Store
+
+.vscode/
