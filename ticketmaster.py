@@ -25,7 +25,7 @@ def find_events(city, keyword):
     for event in data["_embedded"]["events"]:
         venue = event["_embedded"]["venues"][0]
 
-        # Not every venue includes coordinates; keep them optional.
+        # Not every venue includes coordinates, so we keep them optional.
         location = venue.get("location", {})
         latitude = location.get("latitude")
         longitude = location.get("longitude")
