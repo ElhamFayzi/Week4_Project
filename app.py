@@ -23,6 +23,12 @@ class Event(db.Model):
     weather_id = db.Column(db.Integer, db.ForeignKey('weather.id'), nullable=True)
 def init_database():
     db.create_all()
+
+@app.route('/')
+def index():
+    return "Test"
+
 if __name__ == "__main__":
-    init_database()
+    with app.app_context():
+        init_database()
     app.run(debug=True)
