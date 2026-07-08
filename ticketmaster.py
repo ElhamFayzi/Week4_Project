@@ -15,8 +15,11 @@ def find_events(city, keyword):
         "size": 20,
     }
 
-    response = requests.get(URL, params=params)
-    data = response.json()
+    try:
+        response = requests.get(URL, params=params, timeout=10)
+        data = response.json()
+    except requests.RequestException:
+        return []
 
     if "_embedded" not in data:
         return []
