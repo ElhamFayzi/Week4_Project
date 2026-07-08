@@ -12,7 +12,7 @@ __pycache__/
 .env
 
 # Database (since it is regenerated from searches)
-eventcache.db
+*.db
 
 # OS
 .DS_Store
