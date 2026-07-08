@@ -20,7 +20,11 @@ def geocode(place):
         'size': 1,  # only need the top match
     }
 
-    response = requests.get(URL, params=params, timeout=10)
+    try:
+        response = requests.get(URL, params=params, timeout=10)
+    except requests.RequestException:
+        return {'error': 'Geocoding service unreachable'}
+
     if not response.ok:
         return {'error': f'Geocoding request failed ({response.status_code})'}
 
