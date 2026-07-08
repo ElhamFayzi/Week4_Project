@@ -1,54 +1,57 @@
 import os
-import sqlalchemy as db
+import json
+
 from google import genai
 
-my_api_key = os.getenv("GENAI_KEY")
-client = genai.Client(api_key=my_api_key)
-engine = db.create_engine("sqlite:///eventcache.db")
+client = genai.Client(api_key=os.getenv("GENAI_KEY"))
+
+RESPONSE_STRUCTURE = {
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "id": {"type": "integer"},
+            "reason": {"type": "string"},
+        },
+        "required": ["id", "reason"],
+    },
+}
 
 
-def get_events_from_db():
-    with engine.connect() as connection:
-        rows = connection.execute(
-            db.text("SELECT id, name, url, date, venue, city FROM event")
-        ).fetchall()
-    return rows
+def build_prompt(events, interest):
+    lines = [
+        f"- id={event['id']}: {event['name']} on {event['date']} at {event['venue']}, {event['city']}"
+        for event in events
+    ]
+    event_block = "\n".join(lines)
+
+    return f"""You are an event recommendation assistant. The user is interested in: {interest}.
+                1. Rank the events below from most to least relevant to that interest. 
+                2. For each event, give a short one-sentence reason for its placement. 
+                3. Include every event exactly once.
+                4. Return a JSON array, most relevant first, where each item is:
+                {{"id": <the event id>, "reason": "<one sentence>"}}
+
+                Events:
+                {event_block}
+            """
 
 
-def build_prompt(events, user_interests):
-    texts = ""
-    for i, event in enumerate(events, 1):
-        event_id, name, url, date, venue, city = event
-        texts += f"""
-                Event {i}:
-                - Name: {name}
-                - date: {date}
-                - venue: {venue}
-                - city: {city}
-                - URL: {url}
-                """
+def rank_events(events, interest):
+    if not events:
+        return []
 
-    prompt =  f"""You are an event recommendation assistant. The user is interested in: {user_interests}. Below is a list of upcoming events. Please:
-                1. rank the events from most to least relevant based on the user's interests.
-                2. for each event give a short 1 sentence explanation of why you recommended it
-                3. Please format your response cleanly using a numbered list.
-                4. Start your answer with 'Here are the events ranked from most to least relevant based on your interest in (rephrase the user's interest)':
-
-                Events: {texts}
-               """
-    return prompt
-
-
-def get_recommendation(user_interests):
-    events = get_events_from_db()
-    prompt = build_prompt(events, user_interests)
+    prompt = build_prompt(events, interest)
 
     try:
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
+            model="gemini-2.5-flash",
             contents=prompt,
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": RESPONSE_STRUCTURE,
+            },
         )
+        return json.loads(response.text)
     except Exception:
-        return "Sorry, the recommendation service is currently unavailable. Please try again in a moment."
-
-    return response.text
+        return [{"id": e["id"], "reason": ""} for e in events]
