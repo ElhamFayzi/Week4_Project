@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Results - Event Finder</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
         <h1>Event Finder</h1>
-        <p>Your results</p>
+        <p>Results for "{{ interest }}" near {{ location }}</p>
     </header>
 
     <main>
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <a href="index.html">Back to search</a>
+        <a href="/" class="back-link">Back to search</a>
     </main>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Event Finder</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header>
@@ -12,7 +12,7 @@
     </header>
 
     <main>
-        <form action="results.html" class="search-form">
+        <form action="/results" method="POST" class="search-form">
             <label for="interest">What are you interested in?</label>
             <input type="text" id="interest" name="interest" placeholder="e.g. rock concerts, comedy, basketball">
 

@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: #f4f4f8;
+    color: #222;
     margin: 0;
 }
 
@@ -9,6 +10,11 @@ header {
     color: #fff;
     text-align: center;
     padding: 2rem 1rem;
+}
+
+header p {
+    color: #cfd2e8;
+    margin: 0.5rem 0 0;
 }
 
 main {
@@ -21,10 +27,57 @@ main {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.search-form label {
+    font-weight: bold;
+    margin-top: 0.75rem;
+}
+
+.search-form input {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-form button {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #ef233c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .event-card {
     background: #fff;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 1.25rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+.rank-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #2b2d42;
+    color: #fff;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+}
+
+.event-meta {
+    color: #555;
 }
