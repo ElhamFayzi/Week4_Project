@@ -26,9 +26,9 @@ def find_events(city, keyword):
 
     events = []
     for event in data["_embedded"]["events"]:
-        venue = event["_embedded"]["venues"][0]
+        venues = event.get("_embedded", {}).get("venues", [])
+        venue = venues[0] if venues else {}
 
-        # Not every venue includes coordinates, so we keep them optional.
         location = venue.get("location", {})
         latitude = location.get("latitude")
         longitude = location.get("longitude")
@@ -37,10 +37,10 @@ def find_events(city, keyword):
             {
                 "id": event["id"],
                 "name": event["name"],
-                "url": event["url"],
-                "date": event["dates"]["start"]["localDate"],
-                "venue": venue["name"],
-                "city": venue["city"]["name"],
+                "url": event.get("url"),
+                "date": event.get("dates", {}).get("start", {}).get("localDate"),
+                "venue": venue.get("name"),
+                "city": venue.get("city", {}).get("name"),
                 "latitude": float(latitude) if latitude is not None else None,
                 "longitude": float(longitude) if longitude is not None else None,
             }
