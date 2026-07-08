@@ -5,6 +5,7 @@ from ticketmaster import find_events
 from geocode import geocode
 from maps import get_distance_and_time
 from weather import get_weather_forecast
+from genai import rank_events
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eventdata.db"
@@ -36,17 +37,15 @@ class Event(db.Model):
     distance_mi = db.Column(db.Float, nullable=True)
     duration_min = db.Column(db.Float, nullable=True)
 
+    rank = db.Column(db.Integer, nullable=True)
+    reason = db.Column(db.String(500), nullable=True)
+
     weather_id = db.Column(db.Integer, db.ForeignKey("weather.id"), nullable=True)
     forecast = db.relationship("Weather", backref="events", lazy=True)
 
 
 def run_pipeline(interest, location):
-    """Fetch events for a search, enrich them, and store them in the DB.
-    geocode(location)      -> user coordinates
-    find_events(city, kw)  -> events (+ venue coordinates)
-    per event: weather + distance
-    """
-    # Because DB is a cache of the latest search, so clear the previous one first.
+    # Because DB is a cache of the latest search, so clear the previous one first so they don't interfere with new searches.
     Event.query.delete()
     Weather.query.delete()
     db.session.commit()
@@ -100,6 +99,42 @@ def run_pipeline(interest, location):
 
     db.session.commit()
 
+    rank_stored_events(interest)
+
+
+def rank_stored_events(interest):
+    stored = Event.query.all()
+    event_dicts = [
+        {
+            "id": event.id,
+            "name": event.name,
+            "date": event.date,
+            "venue": event.venue,
+            "city": event.city,
+        }
+        for event in stored
+    ]
+
+    ranking = rank_events(event_dicts, interest)
+    by_id = {event.id: event for event in stored}
+
+    position = 0
+    ranked_ids = set()
+    for item in ranking:
+        event = by_id.get(item.get("id"))
+        if event is not None and event.id not in ranked_ids:
+            position += 1
+            event.rank = position
+            event.reason = item.get("reason", "")
+            ranked_ids.add(event.id)
+
+    for event in stored:
+        if event.id not in ranked_ids:
+            position += 1
+            event.rank = position
+
+    db.session.commit()
+
 
 @app.route("/")
 def index():
@@ -108,15 +143,11 @@ def index():
 
 @app.route("/results", methods=["POST"])
 def results():
-    """Run the pipeline for a submitted search and show the results.
-
-    Gemini ranking gets layered on top of this next.
-    """
     interest = request.form.get("interest", "")
     location = request.form.get("location", "")
 
     run_pipeline(interest, location)
-    events = Event.query.all()
+    events = Event.query.order_by(Event.rank).all()
 
     return render_template(
         "results.html", interest=interest, location=location, events=events
