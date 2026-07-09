@@ -17,21 +17,31 @@
         {% endif %}
 
         <div class="event-list">
+            {% for event in events %}
             <div class="event-card">
-                <span class="rank-badge">#1</span>
-                <h2>Sample Event</h2>
-                <p class="event-meta">Date - Venue - City</p>
-                <p>Distance: --</p>
-                <p>Weather: --</p>
-            </div>
+                <span class="rank-badge">#{{ event.rank }}</span>
+                <h2><a href="{{ event.url }}" target="_blank">{{ event.name }}</a></h2>
+                <p class="event-meta">{{ event.date }} - {{ event.venue }}, {{ event.city }}</p>
 
-            <div class="event-card">
-                <span class="rank-badge">#2</span>
-                <h2>Sample Event</h2>
-                <p class="event-meta">Date - Venue - City</p>
-                <p>Distance: --</p>
-                <p>Weather: --</p>
+                {% if event.reason %}
+                <p>{{ event.reason }}</p>
+                {% endif %}
+
+                {% if event.distance_mi is not none %}
+                <p>Distance: {{ event.distance_mi }} mi ({{ event.duration_min }} min drive)</p>
+                {% else %}
+                <p>Distance: unavailable</p>
+                {% endif %}
+
+                {% if event.forecast %}
+                <p>Weather: {{ event.forecast.description }}, {{ event.forecast.temp_min_f }}-{{ event.forecast.temp_max_f }} F, {{ event.forecast.precipitation_probability }}% chance of rain</p>
+                {% else %}
+                <p>Weather: no forecast yet</p>
+                {% endif %}
             </div>
+            {% else %}
+            <p class="notice">No events found. Try a different interest or location.</p>
+            {% endfor %}
         </div>
 
         <a href="/" class="back-link">Back to search</a>
