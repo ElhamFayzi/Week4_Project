@@ -8,7 +8,7 @@
 <body>
     <header>
         <h1>Event Finder</h1>
-        <p>Results for "{{ interest }}" near {{ location }}</p>
+        <p>{{ event_type or "Events" }} near {{ location }}{% if interest %}, ranked by your interest in "{{ interest }}"{% endif %}</p>
     </header>
 
     <main>

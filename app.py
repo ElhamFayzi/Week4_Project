@@ -42,7 +42,7 @@ class Event(db.Model):
     forecast = db.relationship("Weather", backref="events", lazy=True)
 
 
-def run_pipeline(interest, location):
+def run_pipeline(event_type, interest, location):
     # Because DB is a cache of the latest search, so clear the previous one first so they don't interfere with new searches.
     Event.query.delete()
     Weather.query.delete()
@@ -53,7 +53,7 @@ def run_pipeline(interest, location):
     user_lon = user.get("lon")
 
     city = location.split(",")[0].strip()
-    events = find_events(city, interest)
+    events = find_events(city, event_type)
 
     for event in events:
         has_coords = event["latitude"] is not None and event["longitude"] is not None
@@ -146,14 +146,16 @@ def index():
 
 @app.route("/results", methods=["POST"])
 def results():
+    event_type = request.form.get("event_type", "")
     interest = request.form.get("interest", "")
     location = request.form.get("location", "")
 
-    ranking_ok = run_pipeline(interest, location)
+    ranking_ok = run_pipeline(event_type, interest, location)
     events = Event.query.order_by(Event.rank).all()
 
     return render_template(
         "results.html",
+        event_type=event_type,
         interest=interest,
         location=location,
         events=events,

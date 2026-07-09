@@ -13,11 +13,14 @@
 
     <main>
         <form action="/results" method="POST" class="search-form">
-            <label for="interest">What are you interested in?</label>
-            <input type="text" id="interest" name="interest" placeholder="e.g. rock concerts, comedy, basketball">
+            <label for="event_type">What kind of events?</label>
+            <input type="text" id="event_type" name="event_type" placeholder="e.g. concerts, comedy, sports">
 
             <label for="location">Your location</label>
             <input type="text" id="location" name="location" placeholder="e.g. Atlanta, GA">
+
+            <label for="interest">What are you into? <small>(Used to rank events)</small></label>
+            <input type="text" id="interest" name="interest" placeholder="e.g. 90s hip-hop, female vocalists, indie">
 
             <button type="submit">Find Events</button>
         </form>
