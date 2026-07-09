@@ -6,8 +6,6 @@ import geocode
 import weather
 import ticketmaster
 
-
-
 class BasicTests(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()

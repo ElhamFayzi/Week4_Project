@@ -24,7 +24,11 @@ def get_distance_and_time(user_lat, user_lon, venue_lat, venue_lon):
         'units': 'mi'
     }
 
-    response = requests.post(URL, json=contents, headers=headers, timeout=10)
+    try:
+        response = requests.post(URL, json=contents, headers=headers, timeout=10)
+    except requests.RequestException:
+        return {'error': 'Routing service unreachable'}
+
     if not response.ok:
         return {'error': f'Routing request failed ({response.status_code})'}
 

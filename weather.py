@@ -49,8 +49,14 @@ def get_weather_forecast(lat, lon, date):
         'temperature_unit': 'fahrenheit',
     }
 
-    response = requests.get(URL, params=params, timeout=10)
+    try:
+        response = requests.get(URL, params=params, timeout=10)
+    except requests.RequestException:
+        return {'error': 'Weather service unreachable'}
+
     if not response.ok:
+        if response.status_code == 400 and 'out of allowed range' in response.text:
+            return {'error': 'Forecast not available this far in advance'}
         return {'error': f'Weather request failed ({response.status_code})'}
 
     data = response.json()

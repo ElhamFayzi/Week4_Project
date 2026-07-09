@@ -81,3 +81,31 @@ main {
 .event-meta {
     color: #555;
 }
+
+.search-form button.secondary {
+    background-color: #edf2f4;
+    color: #2b2d42;
+    border: 1px solid #8d99ae;
+    margin-top: 0.25rem;
+}
+
+.notice {
+    background-color: #fff3cd;
+    border: 1px solid #ffe69c;
+    color: #664d03;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: #2b2d42;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
