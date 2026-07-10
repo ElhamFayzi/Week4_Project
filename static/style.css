@@ -3,10 +3,11 @@ body {
     background-color: #f4f4f8;
     color: #222;
     margin: 0;
+    line-height: 1.5;
 }
 
 header {
-    background-color: #2b2d42;
+    background: linear-gradient(135deg, #2b2d42, #43466b);
     color: #fff;
     text-align: center;
     padding: 2rem 1rem;
@@ -30,6 +31,7 @@ main {
     background: #fff;
     padding: 1.5rem;
     border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(43, 45, 66, 0.08);
 }
 
 .search-form label {
@@ -37,10 +39,22 @@ main {
     margin-top: 0.75rem;
 }
 
+.search-form label small {
+    font-weight: normal;
+    color: #888;
+}
+
 .search-form input {
     padding: 0.6rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-form input:focus {
+    outline: none;
+    border-color: #2b2d42;
+    box-shadow: 0 0 0 3px rgba(43, 45, 66, 0.15);
 }
 
 .search-form button {
@@ -52,6 +66,15 @@ main {
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.search-form button:hover {
+    background-color: #d90429;
+}
+
+.search-form button:active {
+    transform: translateY(1px);
 }
 
 .event-list {
@@ -65,6 +88,32 @@ main {
     padding: 1.25rem;
     border-radius: 8px;
     position: relative;
+    box-shadow: 0 2px 8px rgba(43, 45, 66, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(43, 45, 66, 0.14);
+}
+
+.event-card h2 {
+    margin: 0 3rem 0.25rem 0;
+    font-size: 1.2rem;
+}
+
+.event-card h2 a {
+    color: #2b2d42;
+    text-decoration: none;
+}
+
+.event-card h2 a:hover {
+    color: #ef233c;
+    text-decoration: underline;
+}
+
+.event-card p {
+    margin: 0.3rem 0;
 }
 
 .rank-badge {
@@ -89,6 +138,10 @@ main {
     margin-top: 0.25rem;
 }
 
+.search-form button.secondary:hover {
+    background-color: #dde3e8;
+}
+
 .notice {
     background-color: #fff3cd;
     border: 1px solid #ffe69c;
@@ -108,4 +161,19 @@ main {
 
 .back-link:hover {
     text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 1.25rem 1rem;
+    }
+
+    main {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .search-form,
+    .event-card {
+        padding: 1rem;
+    }
 }
