@@ -131,11 +131,32 @@ main {
     color: #555;
 }
 
+.location-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.location-row input {
+    flex: 1;
+    min-width: 0;
+}
+
 .search-form button.secondary {
+    margin: 0;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0 0.9rem;
+    font-size: 0.85rem;
     background-color: #edf2f4;
     color: #2b2d42;
     border: 1px solid #8d99ae;
-    margin-top: 0.25rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-form button.secondary:hover {
+    background-color: #e2e8ec;
 }
 
 .search-form button.secondary:hover {
