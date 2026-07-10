@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,8 +10,6 @@ from maps import get_distance_and_time
 from weather import get_weather_forecast
 from genai import rank_events
 
-from dotenv import load_dotenv
-load_dotenv()
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eventdata.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
